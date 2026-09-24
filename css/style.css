@@ -812,7 +812,7 @@ ol {
   border-top: 3px solid rgba(214, 168, 75, 0.2);
   border-radius: var(--radius);
   padding: 18px 16px 16px;
-  min-height: 184px;
+  min-height: 172px;
   position: relative;
 }
 
@@ -874,6 +874,24 @@ ol {
 .problem-preview.chat span:first-child { width: 78%; }
 .problem-preview.chat span:last-child { width: 52%; }
 .problem-preview.sheet span:nth-child(2) { width: 86%; }
+
+.problem-transition {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  text-align: center;
+}
+
+.problem-transition strong {
+  color: var(--primary-dark);
+  font-size: 1.02rem;
+}
 
 .workflow {
   background:
@@ -992,9 +1010,18 @@ ol {
   grid-column: span 4;
 }
 
+.bento-category {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
 .bento-card h3 {
   color: var(--navy);
   font-size: 1.08rem;
+  line-height: 1.45;
   margin-bottom: 6px;
 }
 
@@ -1008,11 +1035,11 @@ ol {
   margin-bottom: 16px;
 }
 .compact-bento .bento-card {
-  min-height: 188px;
+  min-height: 176px;
 }
 
 .compact-bento .bento-lg {
-  min-height: 216px;
+  min-height: 204px;
 }
 
 .compact-bento .bento-copy {
@@ -1266,7 +1293,7 @@ ol {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px 24px;
+  padding: 22px 20px;
   box-shadow: var(--shadow-soft);
 }
 
@@ -1484,7 +1511,7 @@ ol {
     radial-gradient(700px 280px at 80% 0%, rgba(8, 127, 115, 0.28), transparent 55%),
     linear-gradient(135deg, #12202f 0%, #0d3d38 58%, #172235 100%);
   color: #fff;
-  padding: 88px 0;
+  padding: 72px 0;
 }
 
 .cta-inner {
@@ -1557,11 +1584,33 @@ ol {
   color: rgba(255, 255, 255, 0.62);
 }
 
+.demo-form .btn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.form-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .form-note {
   grid-column: 1 / -1;
   min-height: 1.2em;
   font-size: 0.85rem;
   color: #f3e6c0;
+}
+
+.form-note.is-success {
+  color: #b9f2d4;
+}
+
+.form-note.is-error {
+  color: #ffd1d1;
 }
 
 .login-panel {
@@ -1582,7 +1631,7 @@ ol {
   width: min(420px, 100%);
   background: #fff;
   border-radius: 20px;
-  padding: 28px 24px;
+  padding: 22px 20px;
   text-align: center;
   box-shadow: var(--shadow);
 }
@@ -1615,12 +1664,12 @@ ol {
 .site-footer {
   background: #101924;
   color: rgba(255, 255, 255, 0.78);
-  padding: 56px 0 24px;
+  padding: 48px 0 22px;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr repeat(3, 1fr);
+  grid-template-columns: 1.4fr 1fr 1fr;
   gap: 32px;
 }
 
@@ -1882,8 +1931,8 @@ ol {
   .section,
   .final-cta,
   .hero {
-    padding-top: 56px;
-    padding-bottom: 56px;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
 
   .hero-grid {

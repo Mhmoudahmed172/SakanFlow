@@ -124,13 +124,46 @@
   }
 
   if (demoForm) {
-    demoForm.addEventListener("submit", function (event) {
+    demoForm.addEventListener("submit", async function (event) {
       event.preventDefault();
       var note = demoForm.querySelector(".form-note");
+      var submitButton = demoForm.querySelector('button[type="submit"]');
+      var defaultButtonText = submitButton ? submitButton.textContent : "";
+
       if (note) {
-        note.textContent = "شكرًا لك. تم تجهيز طلب العرض التوضيحي، وسنتواصل معك عبر رقمك.";
+        note.className = "form-note is-loading";
+        note.textContent = "جارٍ إرسال طلبك...";
       }
-      demoForm.reset();
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "جارٍ الإرسال...";
+      }
+
+      try {
+        var response = await fetch(demoForm.action, {
+          method: "POST",
+          body: new FormData(demoForm),
+          headers: { "Accept": "application/json" }
+        });
+
+        if (!response.ok) throw new Error("Request failed");
+
+        if (note) {
+          note.className = "form-note is-success";
+          note.textContent = "شكرًا لك. تم إرسال طلب العرض وسنتواصل معك عبر رقمك.";
+        }
+        demoForm.reset();
+      } catch (error) {
+        if (note) {
+          note.className = "form-note is-error";
+          note.textContent = "تعذر إرسال الطلب الآن. تحقق من اتصالك وحاول مرة أخرى.";
+        }
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = defaultButtonText;
+        }
+      }
     });
   }
 
