@@ -6,7 +6,7 @@
   var nav = document.getElementById("primary-nav");
   var backdrop = document.querySelector(".nav-backdrop");
   var navLinks = document.querySelectorAll(".nav-link");
-  var sections = ["home", "features", "solutions", "how", "reports"]
+  var sections = ["home", "features", "showcase", "solutions"]
     .map(function (id) { return document.getElementById(id); })
     .filter(Boolean);
   var loginPanel = document.getElementById("login");
@@ -141,3 +141,4 @@
     updateActiveNav();
   }, { passive: true });
 })();
+
