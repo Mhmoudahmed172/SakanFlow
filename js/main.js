@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  var APP_URL = "https://real-estate-platform-blond.vercel.app/dashboard";
   var header = document.querySelector(".site-header");
   var toggle = document.querySelector(".menu-toggle");
   var nav = document.getElementById("primary-nav");
@@ -9,10 +10,13 @@
   var sections = ["home", "features", "showcase", "solutions"]
     .map(function (id) { return document.getElementById(id); })
     .filter(Boolean);
-  var loginPanel = document.getElementById("login");
-  var loginClose = document.querySelector(".login-close");
-  var demoForm = document.getElementById("demo-request");
+  var demoPanel = document.getElementById("demo-access");
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var lastFocusedElement = null;
+
+  document.querySelectorAll("[data-app-link]").forEach(function (link) {
+    link.setAttribute("href", APP_URL);
+  });
 
   function setMenu(open) {
     document.body.classList.toggle("menu-open", open);
@@ -27,9 +31,9 @@
     }
   }
 
-  function closeMenu() {
+  function closeMenu(returnFocus) {
     setMenu(false);
-    if (toggle) toggle.focus();
+    if (returnFocus && toggle) toggle.focus();
   }
 
   function onScrollHeader() {
@@ -48,15 +52,92 @@
     });
   }
 
+  function getFocusableElements(container) {
+    return Array.prototype.slice.call(container.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(function (element) {
+      return !element.hasAttribute("hidden");
+    });
+  }
+
+  function openDemoAccess(trigger) {
+    if (!demoPanel) return;
+    lastFocusedElement = trigger || document.activeElement;
+    demoPanel.hidden = false;
+    demoPanel.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    var closeButton = demoPanel.querySelector(".js-demo-close");
+    if (closeButton) closeButton.focus();
+  }
+
+  function closeDemoAccess() {
+    if (!demoPanel || demoPanel.hidden) return;
+    demoPanel.hidden = true;
+    demoPanel.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+      lastFocusedElement.focus();
+    }
+  }
+
+  function trapDialogFocus(event) {
+    if (!demoPanel || demoPanel.hidden || event.key !== "Tab") return;
+    var focusable = getFocusableElements(demoPanel);
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+
+    if (!demoPanel.contains(document.activeElement)) {
+      event.preventDefault();
+      first.focus();
+      return;
+    }
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function fallbackCopy(text) {
+    var textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    var copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch (error) {
+      copied = false;
+    }
+    textarea.remove();
+    return copied;
+  }
+
+  async function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        return fallbackCopy(text);
+      }
+    }
+    return fallbackCopy(text);
+  }
+
   if (toggle) {
     toggle.addEventListener("click", function () {
       setMenu(!document.body.classList.contains("menu-open"));
     });
   }
 
-  if (backdrop) {
-    backdrop.addEventListener("click", closeMenu);
-  }
+  if (backdrop) backdrop.addEventListener("click", function () { closeMenu(false); });
 
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener("click", function (event) {
@@ -65,9 +146,9 @@
       var target = document.querySelector(id);
       if (!target) return;
       event.preventDefault();
-      if (document.body.classList.contains("menu-open")) setMenu(false);
-      if (id === "#login") {
-        openLogin();
+      if (document.body.classList.contains("menu-open")) closeMenu(false);
+      if (id === "#demo-access") {
+        openDemoAccess(anchor);
         return;
       }
       target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
@@ -75,34 +156,40 @@
     });
   });
 
-  function openLogin() {
-    if (!loginPanel) return;
-    loginPanel.hidden = false;
-    loginPanel.setAttribute("aria-hidden", "false");
-    document.body.classList.add("modal-open");
-    var closeBtn = loginPanel.querySelector(".login-close");
-    if (closeBtn) closeBtn.focus();
-  }
+  document.querySelectorAll(".js-demo-close").forEach(function (button) {
+    button.addEventListener("click", closeDemoAccess);
+  });
 
-  function closeLogin() {
-    if (!loginPanel) return;
-    loginPanel.hidden = true;
-    loginPanel.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("modal-open");
-  }
-
-  if (loginClose) loginClose.addEventListener("click", closeLogin);
-  if (loginPanel) {
-    loginPanel.addEventListener("click", function (event) {
-      if (event.target === loginPanel) closeLogin();
+  if (demoPanel) {
+    demoPanel.addEventListener("click", function (event) {
+      if (event.target === demoPanel) closeDemoAccess();
     });
   }
 
+  document.querySelectorAll(".copy-button").forEach(function (button) {
+    button.addEventListener("click", async function () {
+      var target = document.getElementById(button.dataset.copyTarget);
+      if (!target) return;
+      var originalLabel = button.dataset.defaultAriaLabel || button.getAttribute("aria-label");
+      button.dataset.defaultAriaLabel = originalLabel || "";
+      var copied = await copyText(target.textContent.trim());
+      button.textContent = copied ? "تم النسخ" : "تعذر النسخ";
+      button.setAttribute("aria-label", copied ? "تم النسخ" : "تعذر النسخ، حاول تحديد النص ونسخه يدويًا");
+      button.focus();
+      window.clearTimeout(button.copyResetTimer);
+      button.copyResetTimer = window.setTimeout(function () {
+        button.textContent = button.dataset.defaultText || "نسخ";
+        if (originalLabel) button.setAttribute("aria-label", originalLabel);
+      }, 1800);
+    });
+  });
+
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
-      if (document.body.classList.contains("menu-open")) closeMenu();
-      if (loginPanel && !loginPanel.hidden) closeLogin();
+      if (document.body.classList.contains("menu-open")) closeMenu(true);
+      closeDemoAccess();
     }
+    trapDialogFocus(event);
   });
 
   if (!reduceMotion && "IntersectionObserver" in window) {
@@ -114,58 +201,123 @@
         }
       });
     }, { threshold: 0.16, rootMargin: "0px 0px -8% 0px" });
-    document.querySelectorAll(".reveal").forEach(function (el) {
-      revealer.observe(el);
-    });
+    document.querySelectorAll(".reveal").forEach(function (el) { revealer.observe(el); });
   } else {
-    document.querySelectorAll(".reveal").forEach(function (el) {
-      el.classList.add("is-in");
-    });
+    document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("is-in"); });
   }
 
-  if (demoForm) {
-    demoForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      var note = demoForm.querySelector(".form-note");
-      var submitButton = demoForm.querySelector('button[type="submit"]');
-      var defaultButtonText = submitButton ? submitButton.textContent : "";
+  function normalizeValue(field) {
+    field.value = field.value.replace(/\s+/g, " ").trim();
+    return field.value;
+  }
 
-      if (note) {
-        note.className = "form-note is-loading";
-        note.textContent = "جارٍ إرسال طلبك...";
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+  }
+
+  function isValidPhone(value) {
+    var compact = value.replace(/[\s().-]/g, "");
+    return /^\+?\d{7,15}$/.test(compact);
+  }
+
+  function setFieldError(field, message) {
+    var wrapper = field.closest(".form-field");
+    var error = wrapper ? wrapper.querySelector(".field-error") : null;
+    if (message) {
+      field.setAttribute("aria-invalid", "true");
+      if (error) {
+        error.textContent = message;
+        if (error.id) field.setAttribute("aria-describedby", error.id);
       }
+    } else {
+      field.removeAttribute("aria-invalid");
+      if (error) error.textContent = "";
+    }
+  }
+
+  function validateManagedForm(form) {
+    var firstInvalid = null;
+    var requiredMessage = "هذا الحقل مطلوب.";
+    form.querySelectorAll("input, textarea").forEach(function (field) {
+      if (field.type === "hidden" || field.name === "_honey") return;
+      var value = normalizeValue(field);
+      var message = "";
+      if (field.hasAttribute("required") && !value) message = requiredMessage;
+      if (!message && field.type === "email" && value && !isValidEmail(value)) message = "أدخل بريدًا إلكترونيًا صحيحًا.";
+      if (!message && field.type === "tel" && value && !isValidPhone(value)) message = "أدخل رقم جوال صحيحًا مع مفتاح الدولة عند الحاجة.";
+      setFieldError(field, message);
+      if (message && !firstInvalid) firstInvalid = field;
+    });
+    if (firstInvalid) firstInvalid.focus();
+    return !firstInvalid;
+  }
+
+  function setFormNote(form, state, title, message) {
+    var note = form.querySelector(".form-note");
+    if (!note) return;
+    note.className = "form-note" + (note.classList.contains("page-form-note") ? " page-form-note" : "") + (state ? " is-" + state : "");
+    note.replaceChildren();
+    if (title) {
+      var strong = document.createElement("strong");
+      strong.textContent = title;
+      note.appendChild(strong);
+      var span = document.createElement("span");
+      span.textContent = message;
+      note.appendChild(span);
+    } else {
+      note.textContent = message;
+    }
+  }
+
+  document.querySelectorAll(".managed-form").forEach(function (form) {
+    var isSubmitting = false;
+    form.addEventListener("input", function (event) {
+      if (event.target.matches("input, textarea")) setFieldError(event.target, "");
+    });
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      if (isSubmitting) return;
+      if (!validateManagedForm(form)) {
+        setFormNote(form, "error", "", "راجع الحقول المحددة ثم حاول مرة أخرى.");
+        return;
+      }
+
+      var endpoint = form.getAttribute("action") || form.dataset.endpoint || "";
+      var submitButton = form.querySelector('button[type="submit"]');
+      var defaultText = submitButton ? (submitButton.dataset.defaultText || submitButton.textContent) : "";
+
+      if (!endpoint) {
+        setFormNote(form, "error", "", "تعذر تحديد وجهة الإرسال. حاول مرة أخرى لاحقًا.");
+        return;
+      }
+
+      isSubmitting = true;
       if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = "جارٍ الإرسال...";
       }
+      setFormNote(form, "loading", "", "جارٍ إرسال الطلب...");
 
       try {
-        var response = await fetch(demoForm.action, {
-          method: "POST",
-          body: new FormData(demoForm),
+        var response = await fetch(endpoint, {
+          method: (form.getAttribute("method") || "POST").toUpperCase(),
+          body: new FormData(form),
           headers: { "Accept": "application/json" }
         });
-
         if (!response.ok) throw new Error("Request failed");
-
-        if (note) {
-          note.className = "form-note is-success";
-          note.textContent = "شكرًا لك. تم إرسال طلب العرض وسنتواصل معك عبر رقمك.";
-        }
-        demoForm.reset();
+        setFormNote(form, "success", form.dataset.successTitle || "تم الإرسال بنجاح", form.dataset.successMessage || "تم استلام رسالتك بنجاح.");
+        form.reset();
       } catch (error) {
-        if (note) {
-          note.className = "form-note is-error";
-          note.textContent = "تعذر إرسال الطلب الآن. تحقق من اتصالك وحاول مرة أخرى.";
-        }
+        setFormNote(form, "error", "", "تعذر إرسال الطلب الآن. تحقق من اتصالك وحاول مرة أخرى.");
       } finally {
+        isSubmitting = false;
         if (submitButton) {
           submitButton.disabled = false;
-          submitButton.textContent = defaultButtonText;
+          submitButton.textContent = defaultText;
         }
       }
     });
-  }
+  });
 
   onScrollHeader();
   updateActiveNav();
@@ -174,4 +326,3 @@
     updateActiveNav();
   }, { passive: true });
 })();
-

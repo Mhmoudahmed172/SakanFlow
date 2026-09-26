@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>تواصل معنا | SakanFlow</title>
-  <meta name="description" content="تواصل مع SakanFlow لطلب عرض توضيحي حول إدارة العمليات العقارية.">
+  <meta name="description" content="تواصل مع SakanFlow لمعرفة المزيد عن منصة إدارة العقارات أو لترتيب عرض توضيحي.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="تواصل معنا | SakanFlow">
+  <meta property="og:description" content="لديك سؤال عن SakanFlow أو ترغب بمعرفة المزيد؟ تواصل معنا وسنكون سعداء بمساعدتك.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/og-sakanflow.svg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,26 +18,74 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">تخطي إلى المحتوى</a>
   <header class="site-header is-scrolled">
     <div class="container header-inner">
-      <a class="brand" href="index.html">
+      <a class="brand" href="index.html" aria-label="SakanFlow — العودة للرئيسية">
         <img class="brand-mark" src="assets/images/sakanflow-mark.png" alt="" width="42" height="34">
         <span class="brand-copy">
           <span class="brand-name" lang="en">Sakan<span>Flow</span></span>
           <span class="brand-tagline">إدارة عقارية أذكى</span>
         </span>
       </a>
-      <a class="btn btn-primary" href="index.html#demo">اطلب عرضًا توضيحيًا</a>
+      <a class="btn btn-primary" href="index.html#demo-request">اطلب عرضًا توضيحيًا</a>
     </div>
   </header>
-  <main class="page-main">
+  <main class="page-main" id="main">
     <div class="container">
-      <article class="page-card">
+      <article class="page-card page-card-wide">
+        <p class="eyebrow"><span class="eyebrow-dot"></span>تواصل معنا</p>
         <h1>تواصل معنا</h1>
-        <p>لطلب عرض توضيحي أو معرفة كيف تناسب SakanFlow محفظتك العقارية، أرسل بيانات التواصل من الصفحة الرئيسية.</p>
-        <p><a class="btn btn-primary" href="index.html#demo">الانتقال إلى طلب العرض</a></p>
+        <p>لديك سؤال عن SakanFlow أو ترغب بمعرفة المزيد؟ تواصل معنا وسنكون سعداء بمساعدتك.</p>
+        <form class="page-form managed-form" action="https://formsubmit.co/ajax/mhmoudtariq172@gmail.com" method="post" novalidate data-form-kind="contact" data-success-title="تم إرسال رسالتك بنجاح" data-success-message="شكرًا لتواصلك مع SakanFlow، سنراجع رسالتك ونتواصل معك قريبًا.">
+          <input type="hidden" name="_subject" value="SakanFlow - رسالة تواصل جديدة">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_source" value="SakanFlow marketing website - contact form">
+          <label class="form-honeypot" aria-hidden="true">
+            اترك هذا الحقل فارغًا
+            <input name="_honey" type="text" tabindex="-1" autocomplete="off">
+          </label>
+          <div class="form-field">
+            <label for="contact-name">الاسم</label>
+            <input id="contact-name" name="الاسم" type="text" autocomplete="name" required>
+            <p class="field-error" id="contact-name-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="contact-email">البريد الإلكتروني</label>
+            <input id="contact-email" name="البريد الإلكتروني" type="email" autocomplete="email" inputmode="email" required>
+            <p class="field-error" id="contact-email-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="contact-phone">رقم الجوال / واتساب</label>
+            <input id="contact-phone" name="رقم الجوال / واتساب" type="tel" autocomplete="tel" inputmode="tel" placeholder="اختياري">
+            <p class="field-error" id="contact-phone-error"></p>
+          </div>
+          <div class="form-field form-field-wide">
+            <label for="contact-message">الرسالة</label>
+            <textarea id="contact-message" name="الرسالة" rows="5" required></textarea>
+            <p class="field-error" id="contact-message-error"></p>
+          </div>
+          <button class="btn btn-primary" type="submit" data-default-text="إرسال الرسالة">إرسال الرسالة</button>
+          <p class="form-privacy-note">بإرسال النموذج، أنت توافق على استخدام بياناتك للتواصل معك بخصوص طلبك. <a href="privacy.html">سياسة الخصوصية</a></p>
+          <div class="form-note page-form-note" role="status" aria-live="polite"></div>
+        </form>
       </article>
     </div>
   </main>
+
+  <footer class="site-footer compact-footer">
+    <div class="container footer-bottom compact-footer-bottom">
+      <p>© 2026 SakanFlow. جميع الحقوق محفوظة.</p>
+      <nav aria-label="روابط قانونية">
+        <a href="index.html">الرئيسية</a>
+        <a class="js-login-link" href="https://real-estate-platform-blond.vercel.app/dashboard" data-app-link>تسجيل الدخول</a>
+        <a href="privacy.html">سياسة الخصوصية</a>
+        <a href="terms.html">الشروط والأحكام</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
 </body>
 </html>

@@ -6,10 +6,16 @@
   <title>SakanFlow | إدارة عقارية أذكى</title>
   <meta name="description" content="منصة عربية متكاملة لإدارة العقارات والوحدات والعقود والتحصيل والصيانة والتقارير من مكان واحد.">
   <meta name="theme-color" content="#087F73">
+  <meta name="robots" content="index, follow">
   <meta property="og:title" content="SakanFlow | إدارة عقارية أذكى">
   <meta property="og:description" content="منصة عربية متكاملة لإدارة العقارات والوحدات والعقود والتحصيل والصيانة والتقارير من مكان واحد.">
   <meta property="og:locale" content="ar_SA">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/og-sakanflow.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SakanFlow | إدارة عقارية أذكى">
+  <meta name="twitter:description" content="منصة عربية متكاملة لإدارة العقارات والوحدات والعقود والتحصيل والصيانة والتقارير من مكان واحد.">
+  <meta name="twitter:image" content="assets/images/og-sakanflow.svg">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +27,7 @@
 
   <header class="site-header" id="top">
     <div class="container header-inner">
-      <a class="brand" href="#home" aria-label="SakanFlow — إدارة عقارية أذكى">
+      <a class="brand" href="index.html" aria-label="SakanFlow — إدارة عقارية أذكى">
         <img class="brand-mark" src="assets/images/sakanflow-mark.png" alt="" width="44" height="36">
         <span class="brand-copy">
           <span class="brand-name" lang="en">Sakan<span>Flow</span></span>
@@ -37,8 +43,8 @@
           <li><a class="nav-link" href="#solutions">لمن تناسب؟</a></li>
         </ul>
         <div class="nav-actions">
-          <a class="btn btn-ghost" href="#login">تسجيل الدخول</a>
-          <a class="btn btn-primary" href="#demo">اطلب عرضًا توضيحيًا</a>
+          <a class="btn btn-ghost js-login-link" href="https://real-estate-platform-blond.vercel.app/dashboard" data-app-link>تسجيل الدخول</a>
+          <a class="btn btn-primary" href="#demo-request">اطلب عرضًا توضيحيًا</a>
         </div>
       </nav>
 
@@ -69,8 +75,8 @@
             تابع العقود والتحصيل والوحدات الشاغرة والصيانة، واعرف ما يحتاج انتباهك قبل أن يتحول إلى مشكلة.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="#demo">اطلب عرضًا توضيحيًا</a>
-            <a class="btn btn-outline btn-lg" href="#showcase">شاهد كيف تعمل المنصة</a>
+            <a class="btn btn-primary btn-lg" href="#demo-request">اطلب عرضًا توضيحيًا</a>
+            <a class="btn btn-outline btn-lg js-demo-trigger" href="#demo-access">جرّب المنصة</a>
           </div>
           <p class="hero-trust">منصة عربية تجمع عمليات إدارة العقار في تجربة واحدة واضحة.</p>
         </div>
@@ -543,35 +549,82 @@
             <a class="btn btn-gold btn-lg" href="#demo-request">اطلب عرضًا توضيحيًا</a>
             <small>تعرّف على المنصة وشاهد كيف يمكن أن تناسب طريقة عملك.</small>
           </div>
-          <a class="btn btn-on-dark btn-lg" href="#login">تسجيل الدخول</a>
+          <a class="btn btn-on-dark btn-lg js-demo-trigger" href="#demo-access">جرّب المنصة</a>
         </div>
-        <form class="demo-form" id="demo-request" action="https://formsubmit.co/ajax/mhmoudtariq172@gmail.com" method="post">
-          <input type="hidden" name="_subject" value="طلب عرض توضيحي جديد من موقع SakanFlow">
+        <form class="demo-form managed-form" id="demo-request" action="https://formsubmit.co/ajax/mhmoudtariq172@gmail.com" method="post" novalidate data-form-kind="demo" data-success-title="تم استلام طلبك بنجاح" data-success-message="شكرًا لاهتمامك بـ SakanFlow، سنتواصل معك قريبًا لترتيب العرض التوضيحي.">
+          <input type="hidden" name="_subject" value="SakanFlow - طلب عرض توضيحي جديد">
           <input type="hidden" name="_template" value="table">
           <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_source" value="SakanFlow marketing website">
           <label class="form-honeypot" aria-hidden="true">
             اترك هذا الحقل فارغًا
             <input name="_honey" type="text" tabindex="-1" autocomplete="off">
           </label>
-          <label class="sr-only" for="demo-name">الاسم</label>
-          <input id="demo-name" name="الاسم" type="text" autocomplete="name" placeholder="الاسم" required>
-          <label class="sr-only" for="demo-company">الشركة</label>
-          <input id="demo-company" name="الشركة" type="text" autocomplete="organization" placeholder="الشركة" required>
-          <label class="sr-only" for="demo-phone">رقم التواصل</label>
-          <input id="demo-phone" name="رقم التواصل" type="tel" autocomplete="tel" inputmode="tel" placeholder="رقم التواصل" required>
-          <button class="btn btn-gold" type="submit">إرسال الطلب</button>
-          <p class="form-note" role="status" aria-live="polite"></p>
+          <div class="form-field">
+            <label for="demo-name">الاسم الكامل</label>
+            <input id="demo-name" name="الاسم" type="text" autocomplete="name" placeholder="مثال: أحمد السالم" required>
+            <p class="field-error" id="demo-name-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="demo-company">اسم الشركة / المؤسسة</label>
+            <input id="demo-company" name="الشركة" type="text" autocomplete="organization" placeholder="اسم الجهة" required>
+            <p class="field-error" id="demo-company-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="demo-phone">رقم الجوال / واتساب</label>
+            <input id="demo-phone" name="رقم الجوال / واتساب" type="tel" autocomplete="tel" inputmode="tel" placeholder="+966 5x xxx xxxx" required>
+            <p class="field-error" id="demo-phone-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="demo-email">البريد الإلكتروني</label>
+            <input id="demo-email" name="البريد الإلكتروني" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required>
+            <p class="field-error" id="demo-email-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="demo-units">عدد العقارات أو الوحدات</label>
+            <input id="demo-units" name="عدد العقارات أو الوحدات" type="text" inputmode="numeric" placeholder="اختياري">
+            <p class="field-error" id="demo-units-error"></p>
+          </div>
+          <div class="form-field form-field-wide">
+            <label for="demo-message">تفاصيل إضافية</label>
+            <textarea id="demo-message" name="الرسالة / التفاصيل" rows="3" placeholder="اختياري: أخبرنا عن طريقة عملك الحالية أو ما تريد رؤيته في العرض"></textarea>
+            <p class="field-error" id="demo-message-error"></p>
+          </div>
+          <button class="btn btn-gold" type="submit" data-default-text="إرسال الطلب">إرسال الطلب</button>
+          <p class="form-privacy-note">بإرسال النموذج، أنت توافق على استخدام بياناتك للتواصل معك بخصوص طلبك. <a href="privacy.html">سياسة الخصوصية</a></p>
+          <div class="form-note" role="status" aria-live="polite"></div>
         </form>
       </div>
     </section>
 
-    <div class="login-panel" id="login" hidden aria-hidden="true">
-      <div class="login-card" role="dialog" aria-labelledby="login-title" aria-modal="true">
-        <button class="login-close" type="button" aria-label="إغلاق">×</button>
+    <div class="login-panel demo-access-panel" id="demo-access" hidden aria-hidden="true">
+      <div class="login-card demo-access-card" role="dialog" aria-modal="true" aria-labelledby="demo-access-title" aria-describedby="demo-access-description">
+        <button class="login-close js-demo-close" type="button" aria-label="إغلاق نافذة الحساب التجريبي">×</button>
         <img src="assets/images/sakanflow-mark.png" alt="" width="40" height="32">
-        <h2 id="login-title">تسجيل الدخول</h2>
-        <p>الدخول إلى مساحة العمل يتم من خلال حساب مؤسستك على SakanFlow.</p>
-        <a class="btn btn-primary" href="#demo">اطلب تفعيل حسابك</a>
+        <h2 id="demo-access-title">جرّب SakanFlow بنفسك</h2>
+        <p id="demo-access-description">استخدم الحساب التجريبي للدخول واستكشاف المنصة والاطلاع على تجربة إدارة العقارات والعقود والتحصيل والصيانة.</p>
+        <div class="demo-account" aria-label="بيانات الحساب التجريبي">
+          <strong>حساب تجريبي</strong>
+          <div class="credential-row">
+            <div>
+              <span>البريد الإلكتروني</span>
+              <code id="demo-account-email" dir="ltr">test@gmail.com</code>
+            </div>
+            <button class="copy-button" type="button" data-copy-target="demo-account-email" data-default-text="نسخ" aria-label="نسخ البريد الإلكتروني للحساب التجريبي">نسخ</button>
+          </div>
+          <div class="credential-row">
+            <div>
+              <span>كلمة المرور</span>
+              <code id="demo-account-password" dir="ltr">1234567890</code>
+            </div>
+            <button class="copy-button" type="button" data-copy-target="demo-account-password" data-default-text="نسخ" aria-label="نسخ كلمة مرور الحساب التجريبي">نسخ</button>
+          </div>
+        </div>
+        <p class="demo-access-note">انسخ بيانات الحساب أولًا، ثم استخدمها في شاشة تسجيل الدخول.</p>
+        <div class="demo-access-actions">
+          <a class="btn btn-primary" href="https://real-estate-platform-blond.vercel.app/dashboard" data-app-link>الدخول إلى النسخة التجريبية</a>
+          <button class="btn btn-outline js-demo-close" type="button">إغلاق</button>
+        </div>
       </div>
     </div>
   </main>
@@ -579,7 +632,7 @@
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <a class="brand" href="#home">
+        <a class="brand" href="index.html">
           <img class="brand-mark" src="assets/images/sakanflow-mark.png" alt="" width="40" height="32">
           <span class="brand-copy">
             <span class="brand-name" lang="en">Sakan<span>Flow</span></span>
@@ -594,7 +647,7 @@
           <li><a href="#showcase">المنصة</a></li>
           <li><a href="#features">المزايا</a></li>
           <li><a href="#solutions">لمن تناسب؟</a></li>
-          <li><a href="#login">تسجيل الدخول</a></li>
+          <li><a class="js-login-link" href="https://real-estate-platform-blond.vercel.app/dashboard" data-app-link>تسجيل الدخول</a></li>
           <li><a href="contact.html">تواصل معنا</a></li>
         </ul>
       </div>
